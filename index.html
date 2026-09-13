@@ -55,76 +55,92 @@
 
 <main id="main">
 
-  <!-- ===== Hero / Parallax Building ===== -->
+  <!-- ===== Hero / 3D Parallax Building ===== -->
   <section class="hero" id="top">
     <div class="hero__scene" id="heroScene">
-      <div class="layer layer--photo" data-speed="0.05" style="background-image:url('https://www.esnadgroupholding.com/wp-content/uploads/2025/09/EGH-Website-Layout_homepage-about.jpg')"></div>
-      <div class="layer layer--sky" data-speed="0.05"></div>
-      <div class="layer layer--glow" data-speed="0.08"></div>
+      <div class="hero__stage" id="heroStage">
 
-      <svg class="layer layer--far" data-speed="0.15" viewBox="0 0 1600 500" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-        <g fill="#0e1a2b">
-          <rect x="0"   y="260" width="90"  height="240"/>
-          <rect x="110" y="200" width="70"  height="300"/>
-          <rect x="200" y="300" width="120" height="200"/>
-          <rect x="340" y="150" width="60"  height="350"/>
-          <rect x="430" y="240" width="100" height="260"/>
-          <rect x="560" y="190" width="80"  height="310"/>
-          <rect x="670" y="280" width="140" height="220"/>
-          <rect x="840" y="220" width="70"  height="280"/>
-          <rect x="930" y="260" width="110" height="240"/>
-          <rect x="1070" y="180" width="65" height="320"/>
-          <rect x="1160" y="250" width="130" height="250"/>
-          <rect x="1310" y="210" width="80"  height="290"/>
-          <rect x="1410" y="290" width="190" height="210"/>
-        </g>
-      </svg>
-
-      <svg class="layer layer--mid" data-speed="0.3" viewBox="0 0 1600 600" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-        <g fill="#122236">
-          <rect x="40"  y="260" width="140" height="340"/>
-          <rect x="220" y="180" width="90"  height="420"/>
-          <rect x="350" y="320" width="180" height="280"/>
-          <rect x="580" y="140" width="110" height="460"/>
-          <rect x="740" y="240" width="160" height="360"/>
-          <rect x="950" y="200" width="100" height="400"/>
-          <rect x="1090" y="300" width="200" height="300"/>
-          <rect x="1330" y="170" width="120" height="430"/>
-          <rect x="1490" y="260" width="150" height="340"/>
-        </g>
-        <g class="mid-windows" fill="#e8c07d" opacity="0.55"></g>
-      </svg>
-
-      <svg class="layer layer--hero-tower" data-speed="0.5" viewBox="0 0 900 900" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
-        <defs>
-          <linearGradient id="towerGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#1a3350"/>
-            <stop offset="100%" stop-color="#0a1622"/>
-          </linearGradient>
-        </defs>
-        <polygon points="300,900 300,260 380,140 460,260 460,900" fill="url(#towerGrad)"/>
-        <rect x="200" y="380" width="90" height="520" fill="#101f30"/>
-        <rect x="470" y="440" width="110" height="460" fill="#0d1a28"/>
-        <g class="tower-windows" fill="#f4d896"></g>
-      </svg>
-
-      <div class="layer layer--haze" data-speed="0.7"></div>
-
-      <div class="hero__content" data-speed="0.15">
-        <p class="eyebrow" data-reveal>Esnad Group Holding</p>
-        <h1 class="hero__title">
-          <span data-reveal>Shaping skylines,</span>
-          <span data-reveal><em>across the Gulf.</em></span>
-        </h1>
-        <p class="hero__sub" data-reveal>
-          A leading real estate organization in the GCC — delivering development,
-          project, property and facility management through six specialist companies,
-          built on innovation, sustainability and excellence.
-        </p>
-        <div class="hero__actions" data-reveal>
-          <a href="#projects" class="btn btn--primary"><span>View Our Projects</span></a>
-          <a href="#contact" class="btn btn--ghost"><span>Get In Touch</span></a>
+        <div class="depth depth--backdrop">
+          <div class="layer layer--photo" data-speed="0.05" style="background-image:url('https://www.esnadgroupholding.com/wp-content/uploads/2025/09/EGH-Website-Layout_homepage-about.jpg')"></div>
+          <div class="layer layer--sky" data-speed="0.05"></div>
+          <div class="layer layer--glow" data-speed="0.08"></div>
         </div>
+
+        <div class="depth depth--far">
+          <svg class="layer layer--far" data-speed="0.15" viewBox="0 0 1600 500" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+            <g fill="#0e1a2b">
+              <rect x="0"   y="260" width="90"  height="240"/>
+              <rect x="110" y="200" width="70"  height="300"/>
+              <rect x="200" y="300" width="120" height="200"/>
+              <rect x="340" y="150" width="60"  height="350"/>
+              <rect x="430" y="240" width="100" height="260"/>
+              <rect x="560" y="190" width="80"  height="310"/>
+              <rect x="670" y="280" width="140" height="220"/>
+              <rect x="840" y="220" width="70"  height="280"/>
+              <rect x="930" y="260" width="110" height="240"/>
+              <rect x="1070" y="180" width="65" height="320"/>
+              <rect x="1160" y="250" width="130" height="250"/>
+              <rect x="1310" y="210" width="80"  height="290"/>
+              <rect x="1410" y="290" width="190" height="210"/>
+            </g>
+          </svg>
+        </div>
+
+        <div class="depth depth--mid">
+          <svg class="layer layer--mid" data-speed="0.3" viewBox="0 0 1600 600" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+            <g fill="#122236">
+              <rect x="40"  y="260" width="140" height="340"/>
+              <rect x="220" y="180" width="90"  height="420"/>
+              <rect x="350" y="320" width="180" height="280"/>
+              <rect x="580" y="140" width="110" height="460"/>
+              <rect x="740" y="240" width="160" height="360"/>
+              <rect x="950" y="200" width="100" height="400"/>
+              <rect x="1090" y="300" width="200" height="300"/>
+              <rect x="1330" y="170" width="120" height="430"/>
+              <rect x="1490" y="260" width="150" height="340"/>
+            </g>
+            <g class="mid-windows" fill="#e8c07d" opacity="0.55"></g>
+          </svg>
+        </div>
+
+        <div class="depth depth--tower">
+          <svg class="layer layer--hero-tower" data-speed="0.5" viewBox="0 0 900 900" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+            <defs>
+              <linearGradient id="towerGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#1a3350"/>
+                <stop offset="100%" stop-color="#0a1622"/>
+              </linearGradient>
+            </defs>
+            <polygon points="300,900 300,260 380,140 460,260 460,900" fill="url(#towerGrad)"/>
+            <rect x="200" y="380" width="90" height="520" fill="#101f30"/>
+            <rect x="470" y="440" width="110" height="460" fill="#0d1a28"/>
+            <g class="tower-windows" fill="#f4d896"></g>
+          </svg>
+        </div>
+
+        <div class="depth depth--haze">
+          <div class="layer layer--haze" data-speed="0.7"></div>
+        </div>
+
+        <div class="depth depth--content">
+          <div class="hero__content" data-speed="0.15">
+            <p class="eyebrow" data-reveal>Esnad Group Holding</p>
+            <h1 class="hero__title">
+              <span data-reveal>Shaping skylines,</span>
+              <span data-reveal><em>across the Gulf.</em></span>
+            </h1>
+            <p class="hero__sub" data-reveal>
+              A leading real estate organization in the GCC — delivering development,
+              project, property and facility management through six specialist companies,
+              built on innovation, sustainability and excellence.
+            </p>
+            <div class="hero__actions" data-reveal>
+              <a href="#projects" class="btn btn--primary"><span>View Our Projects</span></a>
+              <a href="#contact" class="btn btn--ghost"><span>Get In Touch</span></a>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <div class="scroll-cue" aria-hidden="true"><span></span>Scroll</div>

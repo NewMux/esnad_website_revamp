@@ -3,11 +3,14 @@
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---------- Preloader ---------- */
+  /* ---------- Preloader ----------
+     Hidden shortly after this script runs (DOM is already parsed at this
+     point, since the tag sits at the end of body) rather than on
+     window.load — load only fires once every image on the page has
+     finished loading or failed, which can hang the whole page behind the
+     preloader for a long time on a slow connection or a single dead image. */
   const preloader = document.getElementById('preloader');
-  window.addEventListener('load', () => {
-    setTimeout(() => preloader && preloader.classList.add('is-done'), 400);
-  });
+  setTimeout(() => preloader && preloader.classList.add('is-done'), 500);
 
   /* ---------- Footer year ---------- */
   const yearEl = document.getElementById('year');
@@ -105,42 +108,86 @@
     });
   }
 
-  /* ---------- Hero parallax (scroll + mouse) ---------- */
+  /* ---------- Hero: true 3D parallax (perspective depth + scroll + tilt) ---------- */
   const heroScene = document.getElementById('heroScene');
+  const heroStage = document.getElementById('heroStage');
   if (heroScene && !reduceMotion) {
     const layers = Array.from(heroScene.querySelectorAll('[data-speed]'));
-    let mouseX = 0, mouseY = 0;
     let ticking = false;
 
-    const apply = () => {
+    // Scroll drives each depth plane's own translateY, on top of its
+    // static translateZ/scale (set in CSS on the .depth wrapper) — nearer
+    // planes (small |speed|... larger speed) sweep further per pixel scrolled.
+    const applyScroll = () => {
       const scrollY = window.scrollY;
-      const heroHeight = heroScene.clientHeight || window.innerHeight;
       layers.forEach((layer) => {
         const speed = parseFloat(layer.dataset.speed) || 0;
-        const scrollShift = scrollY * speed;
-        const mouseShiftX = mouseX * speed * 18;
-        const mouseShiftY = mouseY * speed * 10;
-        layer.style.transform = `translate3d(${mouseShiftX}px, ${scrollShift + mouseShiftY}px, 0)`;
+        layer.style.transform = `translateY(${scrollY * speed}px)`;
       });
       ticking = false;
     };
-
-    const request = () => {
+    const requestScroll = () => {
       if (!ticking && window.scrollY < window.innerHeight * 1.2) {
         ticking = true;
-        requestAnimationFrame(apply);
+        requestAnimationFrame(applyScroll);
       }
     };
+    window.addEventListener('scroll', requestScroll, { passive: true });
+    window.addEventListener('resize', requestScroll);
+    applyScroll();
 
-    window.addEventListener('scroll', request, { passive: true });
-    heroScene.addEventListener('mousemove', (e) => {
-      const rect = heroScene.getBoundingClientRect();
-      mouseX = (e.clientX - rect.left) / rect.width - 0.5;
-      mouseY = (e.clientY - rect.top) / rect.height - 0.5;
-      request();
+    // Mouse-driven 3D tilt of the whole stage — because each plane sits at
+    // a different translateZ, rotating the shared parent makes near and far
+    // buildings swing past each other exactly like looking into a real
+    // diorama, instead of a flat image sliding around.
+    if (heroStage && window.matchMedia('(pointer: fine)').matches) {
+      let targetX = 0, targetY = 0, curX = 0, curY = 0;
+      heroScene.addEventListener('mousemove', (e) => {
+        const rect = heroScene.getBoundingClientRect();
+        const mx = (e.clientX - rect.left) / rect.width - 0.5;
+        const my = (e.clientY - rect.top) / rect.height - 0.5;
+        targetY = mx * 9;
+        targetX = -my * 6;
+      });
+      heroScene.addEventListener('mouseleave', () => { targetX = 0; targetY = 0; });
+      (function tiltLoop() {
+        curX += (targetX - curX) * 0.06;
+        curY += (targetY - curY) * 0.06;
+        heroStage.style.transform = `rotateX(${curX.toFixed(3)}deg) rotateY(${curY.toFixed(3)}deg)`;
+        requestAnimationFrame(tiltLoop);
+      })();
+    }
+  }
+
+  /* ---------- 3D tilt-on-hover cards ----------
+     The tilt transform is applied to an inner wrapper, never to the card
+     element that owns the mousemove/mouseleave listeners — transforming
+     the hit-tested element itself shifts its own hit-box under the cursor
+     (translateY + rotation nudge it out from under a pointer near an edge)
+     and causes hover to flicker on and off mid-gesture. */
+  if (!reduceMotion && window.matchMedia('(pointer: fine)').matches) {
+    document.querySelectorAll('.project-card, .sector-card').forEach((card) => {
+      const inner = document.createElement('div');
+      inner.className = 'tilt-inner';
+      while (card.firstChild) inner.appendChild(card.firstChild);
+      card.appendChild(inner);
+
+      const glare = document.createElement('span');
+      glare.className = 'tilt-glare';
+      inner.appendChild(glare);
+
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const px = (e.clientX - rect.left) / rect.width;
+        const py = (e.clientY - rect.top) / rect.height;
+        const rx = (0.5 - py) * 10;
+        const ry = (px - 0.5) * 10;
+        inner.style.transform = `perspective(700px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) translateY(-4px)`;
+        glare.style.setProperty('--mx', `${px * 100}%`);
+        glare.style.setProperty('--my', `${py * 100}%`);
+      });
+      card.addEventListener('mouseleave', () => { inner.style.transform = ''; });
     });
-    window.addEventListener('resize', request);
-    apply();
   }
 
   /* ---------- Scroll-reveal ---------- */

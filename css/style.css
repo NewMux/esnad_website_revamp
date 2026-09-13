@@ -170,11 +170,33 @@ button { font: inherit; background: none; border: none; cursor: pointer; color: 
   .menu-toggle { display: flex; }
 }
 
-/* ---------- Hero / Parallax ---------- */
-.hero { position: relative; height: 100vh; min-height: 560px; background: var(--ink); }
+/* ---------- Hero / 3D Parallax ---------- */
+.hero {
+  position: relative; height: 100vh; min-height: 560px; background: var(--ink);
+  perspective: 1600px;
+}
 .hero__scene {
   position: relative; height: 100%; width: 100%; overflow: hidden;
 }
+.hero__stage {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  transform-style: preserve-3d; will-change: transform;
+}
+
+/* Each .depth plane sits at a fixed distance from the camera; scale
+   compensates for perspective foreshortening so the scene reads as
+   full-bleed at rest, and separates visibly on mouse-driven tilt. */
+.depth {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  transform-style: preserve-3d;
+}
+.depth--backdrop { transform: translateZ(-700px) scale(1.4375); }
+.depth--far      { transform: translateZ(-450px) scale(1.28125); }
+.depth--mid      { transform: translateZ(-220px) scale(1.1375); }
+.depth--tower    { transform: translateZ(0) scale(1); }
+.depth--haze     { transform: translateZ(60px) scale(0.9625); }
+.depth--content  { transform: translateZ(140px) scale(0.9125); }
+
 .layer {
   position: absolute; left: 0; right: 0; bottom: 0; width: 100%;
   will-change: transform;
@@ -183,7 +205,7 @@ button { font: inherit; background: none; border: none; cursor: pointer; color: 
   top: 0; height: 100%;
   background-size: cover;
   background-position: center 35%;
-  filter: saturate(0.85) brightness(0.85);
+  filter: saturate(0.85) brightness(0.82) blur(1px);
 }
 .layer--sky {
   top: 0; height: 100%;
@@ -195,7 +217,7 @@ button { font: inherit; background: none; border: none; cursor: pointer; color: 
 }
 .layer--far   { height: 55%; opacity: 0.9; }
 .layer--mid   { height: 75%; }
-.layer--hero-tower { height: 92%; }
+.layer--hero-tower { height: 92%; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.4)); }
 .layer--haze {
   height: 40%;
   background: linear-gradient(to top, rgba(10,22,34,0.95), transparent);
@@ -309,12 +331,14 @@ button { font: inherit; background: none; border: none; cursor: pointer; color: 
 .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
 .card-grid--companies { grid-template-columns: repeat(3, 1fr); }
 .sector-card {
+  position: relative;
   border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;
-  display: flex; flex-direction: column;
   background: linear-gradient(160deg, rgba(255,255,255,0.03), transparent);
-  transition: transform 0.4s var(--ease), border-color 0.4s var(--ease), background 0.4s var(--ease);
+  transition: border-color 0.4s var(--ease), background 0.4s var(--ease);
 }
-.sector-card:hover { transform: translateY(-6px); border-color: var(--gold); background: linear-gradient(160deg, rgba(201,162,75,0.08), transparent); }
+.sector-card:hover { border-color: var(--gold); background: linear-gradient(160deg, rgba(201,162,75,0.08), transparent); }
+.sector-card .tilt-inner { display: flex; flex-direction: column; }
+.sector-card:not(:has(.tilt-inner)):hover { transform: translateY(-6px); }
 .sector-card__media { aspect-ratio: 4/3; overflow: hidden; background: var(--ink-2); }
 .sector-card__media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s var(--ease); }
 .sector-card:hover .sector-card__media img { transform: scale(1.05); }
@@ -353,8 +377,9 @@ button { font: inherit; background: none; border: none; cursor: pointer; color: 
 .project-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
 .project-card {
   position: relative; display: block; border-radius: 6px; overflow: hidden;
-  transition: opacity 0.35s var(--ease), transform 0.35s var(--ease);
+  transition: opacity 0.35s var(--ease);
 }
+.project-card .tilt-inner { display: block; position: relative; }
 .project-card.is-hidden { display: none; }
 .project-card__media {
   aspect-ratio: 4/3; background: linear-gradient(135deg, var(--navy-light), var(--ink-2));
@@ -384,6 +409,15 @@ button { font: inherit; background: none; border: none; cursor: pointer; color: 
 .project-card__media { transition: transform 0.5s var(--ease); }
 .project-card__meta h3 { font-family: var(--font-display); color: var(--paper); font-size: 1.05rem; margin: 0 0 0.25rem; }
 .project-card__meta span { color: var(--gold-light); font-size: 0.8rem; }
+
+/* Cursor-tracked glare for the 3D tilt-on-hover cards */
+.tilt-inner { transform-style: preserve-3d; transition: transform 0.15s ease-out; will-change: transform; }
+.tilt-glare {
+  position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,0.28), transparent 55%);
+  transition: opacity 0.3s var(--ease);
+}
+.project-card:hover .tilt-glare, .sector-card:hover .tilt-glare { opacity: 1; }
 
 @media (max-width: 900px) { .project-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) { .project-grid { grid-template-columns: 1fr; } }
