@@ -107,11 +107,13 @@ button { font: inherit; background: none; border: none; cursor: pointer; color: 
 .header__inner { display: flex; align-items: center; justify-content: space-between; }
 
 .brand {
+  display: flex; align-items: center;
   font-family: var(--font-display);
   font-size: 1.15rem; font-weight: 600; letter-spacing: 0.08em;
   color: var(--paper);
 }
 .brand span { color: var(--gold); font-weight: 400; }
+.brand__logo { height: 38px; width: auto; display: block; }
 
 .nav-desktop { display: flex; align-items: center; gap: 2.25rem; }
 .nav-desktop a {
@@ -177,9 +179,15 @@ button { font: inherit; background: none; border: none; cursor: pointer; color: 
   position: absolute; left: 0; right: 0; bottom: 0; width: 100%;
   will-change: transform;
 }
+.layer--photo {
+  top: 0; height: 100%;
+  background-size: cover;
+  background-position: center 35%;
+  filter: saturate(0.85) brightness(0.85);
+}
 .layer--sky {
   top: 0; height: 100%;
-  background: radial-gradient(120% 90% at 50% 0%, #1e3a5c 0%, #12233a 45%, #0a1622 100%);
+  background: radial-gradient(120% 90% at 50% 0%, rgba(30,58,92,0.55) 0%, rgba(18,35,58,0.68) 45%, rgba(10,22,34,0.9) 100%);
 }
 .layer--glow {
   top: 0; height: 70%;
@@ -274,7 +282,11 @@ button { font: inherit; background: none; border: none; cursor: pointer; color: 
 
 /* ---------- About ---------- */
 .about__grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(2rem, 6vw, 5rem); align-items: center; }
-.about__visual svg { width: 100%; height: auto; filter: drop-shadow(0 30px 40px rgba(10,22,34,0.25)); }
+.about__visual img {
+  width: 100%; height: auto; border-radius: 6px; object-fit: cover;
+  aspect-ratio: 4/5;
+  filter: drop-shadow(0 30px 40px rgba(10,22,34,0.25));
+}
 .about__copy h2 { font-family: var(--font-display); font-weight: 500; font-size: clamp(1.7rem, 3.4vw, 2.4rem); margin: 0 0 1.1rem; }
 .about__copy p { color: var(--text-dim-2); max-width: 54ch; }
 .mv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.75rem; margin: 2rem 0; }
@@ -285,7 +297,7 @@ button { font: inherit; background: none; border: none; cursor: pointer; color: 
 
 @media (max-width: 860px) {
   .about__grid { grid-template-columns: 1fr; }
-  .about__visual { max-width: 280px; margin-inline: auto; }
+  .about__visual { max-width: 420px; margin-inline: auto; }
   .mv-grid { grid-template-columns: 1fr; }
 }
 
@@ -297,11 +309,17 @@ button { font: inherit; background: none; border: none; cursor: pointer; color: 
 .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
 .card-grid--companies { grid-template-columns: repeat(3, 1fr); }
 .sector-card {
-  padding: 2.25rem 1.75rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;
+  display: flex; flex-direction: column;
   background: linear-gradient(160deg, rgba(255,255,255,0.03), transparent);
   transition: transform 0.4s var(--ease), border-color 0.4s var(--ease), background 0.4s var(--ease);
 }
 .sector-card:hover { transform: translateY(-6px); border-color: var(--gold); background: linear-gradient(160deg, rgba(201,162,75,0.08), transparent); }
+.sector-card__media { aspect-ratio: 4/3; overflow: hidden; background: var(--ink-2); }
+.sector-card__media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s var(--ease); }
+.sector-card:hover .sector-card__media img { transform: scale(1.05); }
+.sector-card.no-media .sector-card__media { display: none; }
+.sector-card__body { padding: 1.75rem; }
 .sector-card__num { display: block; font-family: var(--font-display); color: var(--gold); font-size: 0.9rem; margin-bottom: 1rem; }
 .sector-card h3 { font-family: var(--font-display); font-weight: 500; font-size: 1.25rem; margin: 0 0 0.65rem; }
 .sector-card p { color: var(--text-dim); font-size: 0.92rem; margin: 0; }
@@ -343,8 +361,11 @@ button { font: inherit; background: none; border: none; cursor: pointer; color: 
   position: relative; overflow: hidden;
 }
 .project-card__media::after {
-  content: ''; position: absolute; inset: 0;
+  content: ''; position: absolute; inset: 0; pointer-events: none;
   background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 48px);
+}
+.project-card__media img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1;
 }
 .project-grid .project-card:nth-child(6n+2) .project-card__media { background: linear-gradient(135deg,#3a2a1a,#0a1622); }
 .project-grid .project-card:nth-child(6n+3) .project-card__media { background: linear-gradient(135deg,#1e2f22,#0a1622); }
@@ -353,7 +374,7 @@ button { font: inherit; background: none; border: none; cursor: pointer; color: 
 .project-grid .project-card:nth-child(6n+6) .project-card__media { background: linear-gradient(135deg,#213a3a,#0a1622); }
 
 .project-card__meta {
-  position: absolute; left: 0; right: 0; bottom: 0; padding: 1.5rem;
+  position: absolute; left: 0; right: 0; bottom: 0; padding: 1.5rem; z-index: 2;
   background: linear-gradient(to top, rgba(10,22,34,0.92), transparent);
   transform: translateY(8px); opacity: 0.92;
   transition: transform 0.4s var(--ease);
