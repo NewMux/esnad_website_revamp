@@ -15,10 +15,15 @@
 </head>
 <body>
 
+<!-- Fixed WebGL backdrop — a scroll-driven flythrough over a low-poly
+     skyline. Falls back to the flat theme colors if WebGL/three.js is
+     unavailable (see html.no-webgl rules in css/style.css). -->
+<canvas id="webgl-bg" aria-hidden="true"></canvas>
+
 <!-- Preloader -->
 <div class="preloader" id="preloader" aria-hidden="true">
-<div class="preloader__mark">ESNAD</div>
-<div class="preloader__bar"><span></span></div>
+  <div class="preloader__mark">ESNAD</div>
+  <div class="preloader__bar"><span></span></div>
 </div>
 
 <!-- Custom cursor (desktop only, progressively enhanced via JS) -->
@@ -28,495 +33,468 @@
 
 <!-- ===== Header ===== -->
 <header class="site-header" id="siteHeader">
-<div class="wrap header__inner">
-<a href="#top" class="brand"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/ESNAD.png" alt="Esnad Group Holding" class="brand__logo"></a>
+  <div class="wrap header__inner">
+    <a href="#top" class="brand"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/ESNAD.png" alt="Esnad Group Holding" class="brand__logo"></a>
 
-<nav class="nav-desktop" aria-label="Primary">
-<a href="#about">About</a>
-<a href="#work">Work</a>
-<a href="#projects">Projects</a>
-<a href="tel:+97317341117" class="header__phone">+973 1734 1117</a>
-<a href="#contact" class="nav-cta">Contact Us</a>
-</nav>
+    <nav class="nav-desktop" aria-label="Primary">
+      <a href="#about">About</a>
+      <a href="#work">Work</a>
+      <a href="#projects">Projects</a>
+      <a href="tel:+97317341117" class="header__phone">+973 1734 1117</a>
+      <a href="#contact" class="nav-cta">Contact Us</a>
+    </nav>
 
-<button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mobileNav" aria-label="Open menu">
-<span></span><span></span><span></span>
-</button>
-</div>
+    <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mobileNav" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
 </header>
 
 <!-- Fullscreen mobile / overlay nav -->
 <nav class="nav-overlay" id="mobileNav" aria-label="Mobile" aria-hidden="true">
-<a href="#about" data-idx="01">About</a>
-<a href="#work" data-idx="02">Work</a>
-<a href="#projects" data-idx="03">Projects</a>
-<a href="#contact" data-idx="04">Contact</a>
+  <a href="#about" data-idx="01">About</a>
+  <a href="#work" data-idx="02">Work</a>
+  <a href="#projects" data-idx="03">Projects</a>
+  <a href="#contact" data-idx="04">Contact</a>
 </nav>
 
 <main id="main">
 
-<!-- ===== Hero / Full-screen slider ===== -->
-<section class="hero" id="top">
-<div class="hero__slides" id="heroSlides">
+  <!-- ===== Hero flight: 4 chapters, revealed as you scroll through the
+       3D skyline flythrough rendered on the fixed #webgl-bg canvas ===== -->
+  <section class="chapter" id="top">
+    <div class="chapter__content">
+      <p class="eyebrow" data-reveal>Esnad Group Holding</p>
+      <h1 class="hero__title">
+        <span data-reveal>Shaping skylines,</span>
+        <span data-reveal><em>across the Gulf.</em></span>
+      </h1>
+      <p class="hero__sub" data-reveal>
+        A leading real estate organization in the GCC — delivering development,
+        project, property and facility management through six specialist companies.
+      </p>
+    </div>
+    <div class="scroll-cue" data-reveal aria-hidden="true"><span></span>Scroll</div>
+  </section>
 
-<article class="hero-slide is-active" data-slide="0">
-<div class="hero-slide__bg" style="--bg:url('https://www.esnadgroupholding.com/wp-content/uploads/2025/09/EGH-Website-Layout_homepage-about.jpg')"></div>
-<div class="hero-slide__scrim"></div>
-<div class="hero-slide__content">
-<p class="eyebrow" data-reveal>Esnad Group Holding</p>
-<h1 class="hero__title">
-<span data-reveal>Shaping skylines,</span>
-<span data-reveal><em>across the Gulf.</em></span>
-</h1>
-<p class="hero__sub" data-reveal>
-A leading real estate organization in the GCC — delivering development,
-project, property and facility management through six specialist companies.
-</p>
-<a href="#about" class="hero-slide__more" data-reveal>More <span aria-hidden="true">→</span></a>
-</div>
-</article>
+  <section class="chapter">
+    <div class="chapter__content">
+      <p class="eyebrow" data-reveal>Development Management</p>
+      <h1 class="hero__title">
+        <span data-reveal>Every project,</span>
+        <span data-reveal><em>engineered right.</em></span>
+      </h1>
+      <p class="hero__sub" data-reveal>
+        Full-lifecycle oversight of complex real estate and infrastructure — from
+        strategic planning through to expert execution.
+      </p>
+    </div>
+  </section>
 
-<article class="hero-slide" data-slide="1">
-<div class="hero-slide__bg" style="--bg:url('https://www.esnadgroupholding.com/wp-content/uploads/2026/04/developmentmngmt.jpg')"></div>
-<div class="hero-slide__scrim"></div>
-<div class="hero-slide__content">
-<p class="eyebrow">Development Management</p>
-<h1 class="hero__title">
-<span>Every project,</span>
-<span><em>engineered right.</em></span>
-</h1>
-<p class="hero__sub">
-Full-lifecycle oversight of complex real estate and infrastructure — from
-strategic planning through to expert execution.
-</p>
-<a href="#work" class="hero-slide__more">More <span aria-hidden="true">→</span></a>
-</div>
-</article>
+  <section class="chapter">
+    <div class="chapter__content">
+      <p class="eyebrow" data-reveal>Six Companies</p>
+      <h1 class="hero__title">
+        <span data-reveal>One group,</span>
+        <span data-reveal><em>one standard.</em></span>
+      </h1>
+      <p class="hero__sub" data-reveal>
+        Development, construction, property and facility management — delivered
+        end-to-end by six specialist companies across the GCC.
+      </p>
+    </div>
+  </section>
 
-<article class="hero-slide" data-slide="2">
-<div class="hero-slide__bg" style="--bg:url('https://www.esnadgroupholding.com/wp-content/uploads/2025/09/EGH-Website-Layout-38.jpg')"></div>
-<div class="hero-slide__scrim"></div>
-<div class="hero-slide__content">
-<p class="eyebrow">Six Companies</p>
-<h1 class="hero__title">
-<span>One group,</span>
-<span><em>one standard.</em></span>
-</h1>
-<p class="hero__sub">
-Development, construction, property and facility management — delivered
-end-to-end by six specialist companies across the GCC.
-</p>
-<a href="#work" class="hero-slide__more">More <span aria-hidden="true">→</span></a>
-</div>
-</article>
+  <section class="chapter">
+    <div class="chapter__content">
+      <p class="eyebrow" data-reveal>Portfolio</p>
+      <h1 class="hero__title">
+        <span data-reveal>Built to inspire,</span>
+        <span data-reveal><em>across the region.</em></span>
+      </h1>
+      <p class="hero__sub" data-reveal>
+        14+ landmark residential and commercial projects delivered and underway in
+        Bahrain, the UAE and Saudi Arabia.
+      </p>
+    </div>
+  </section>
 
-<article class="hero-slide" data-slide="3">
-<div class="hero-slide__bg" style="--bg:url('https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-MeliaExt-1.jpg')"></div>
-<div class="hero-slide__scrim"></div>
-<div class="hero-slide__content">
-<p class="eyebrow">Portfolio</p>
-<h1 class="hero__title">
-<span>Built to inspire,</span>
-<span><em>across the region.</em></span>
-</h1>
-<p class="hero__sub">
-14+ landmark residential and commercial projects delivered and underway in
-Bahrain, the UAE and Saudi Arabia.
-</p>
-<a href="#projects" class="hero-slide__more">More <span aria-hidden="true">→</span></a>
-</div>
-</article>
+  <!-- ===== Marquee strip ===== -->
+  <div class="marquee">
+    <div class="marquee__track">
+      <span>Esnad</span><span>•</span>
+      <span>Masheed</span><span>•</span>
+      <span>Barnhill</span><span>•</span>
+      <span>Brassfield</span><span>•</span>
+      <span>Merath</span><span>•</span>
+      <span>Amlak Esnad</span><span>•</span>
+      <span>Esnad</span><span>•</span>
+      <span>Masheed</span><span>•</span>
+      <span>Barnhill</span><span>•</span>
+      <span>Brassfield</span><span>•</span>
+      <span>Merath</span><span>•</span>
+      <span>Amlak Esnad</span><span>•</span>
+    </div>
+  </div>
 
-</div>
+  <!-- ===== About ===== -->
+  <section class="section about" id="about">
+    <div class="wrap about__grid">
+      <div class="about__visual" data-reveal>
+        <img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/09/EGH-Website-Layout_homepage-about.jpg" alt="Esnad Group Holding development" loading="lazy">
+      </div>
+      <div class="about__copy">
+        <p class="eyebrow" data-reveal>Who We Are</p>
+        <h2 data-reveal>A leading real estate organization in the GCC.</h2>
+        <p data-reveal>
+          Committed to innovation, sustainability, and excellence, Esnad Group
+          Holding oversees a diverse portfolio of companies offering property
+          management, construction, and consultancy services through five key
+          subsidiary companies.
+        </p>
 
-<div class="hero__ui">
-<button class="hero__arrow hero__arrow--prev" id="heroPrev" aria-label="Previous slide">‹</button>
-<div class="hero__dots" id="heroDots" role="tablist" aria-label="Slides">
-<button class="hero__dot is-active" data-goto="0" role="tab" aria-selected="true">01</button>
-<button class="hero__dot" data-goto="1" role="tab" aria-selected="false">02</button>
-<button class="hero__dot" data-goto="2" role="tab" aria-selected="false">03</button>
-<button class="hero__dot" data-goto="3" role="tab" aria-selected="false">04</button>
-</div>
-<button class="hero__arrow hero__arrow--next" id="heroNext" aria-label="Next slide">›</button>
-</div>
+        <div class="mv-grid">
+          <div>
+            <h3>Mission</h3>
+            <p>To provide consultation and management services characterized by
+              transparency, integrity, and excellence — ensuring that every project
+              meets the highest engineering and quality standards from planning
+              through to completion.</p>
+          </div>
+          <div>
+            <h3>Vision</h3>
+            <p>To be the vanguard of the real estate industry, driving the market
+              forward by setting new benchmarks in quality, innovation and
+              sustainability through world-class projects.</p>
+          </div>
+        </div>
 
-<div class="hero__progress"><span id="heroProgressBar"></span></div>
-</section>
+        <a href="#work" class="link-arrow" data-reveal>Meet our companies →</a>
+      </div>
+    </div>
+  </section>
 
-<!-- ===== Marquee strip ===== -->
-<div class="marquee">
-<div class="marquee__track">
-<span>Esnad</span><span>•</span>
-<span>Masheed</span><span>•</span>
-<span>Barnhill</span><span>•</span>
-<span>Brassfield</span><span>•</span>
-<span>Merath</span><span>•</span>
-<span>Amlak Esnad</span><span>•</span>
-<span>Esnad</span><span>•</span>
-<span>Masheed</span><span>•</span>
-<span>Barnhill</span><span>•</span>
-<span>Brassfield</span><span>•</span>
-<span>Merath</span><span>•</span>
-<span>Amlak Esnad</span><span>•</span>
-</div>
-</div>
+  <!-- ===== Numbers ===== -->
+  <section class="section numbers" id="numbers">
+    <div class="wrap numbers__grid">
+      <div class="stat" data-reveal>
+        <span class="stat__num" data-count="3">0</span>
+        <p>Countries across the GCC</p>
+      </div>
+      <div class="stat" data-reveal>
+        <span class="stat__num" data-count="6">0</span>
+        <p>Group companies</p>
+      </div>
+      <div class="stat" data-reveal>
+        <span class="stat__num" data-count="4">0</span>
+        <p>Core service divisions</p>
+      </div>
+      <div class="stat" data-reveal>
+        <span class="stat__num" data-count="14">0</span><span class="stat__suffix">+</span>
+        <p>Projects delivered &amp; underway</p>
+      </div>
+    </div>
+  </section>
 
-<!-- ===== About ===== -->
-<section class="section about" id="about">
-<div class="wrap about__grid">
-<div class="about__visual" data-reveal>
-<img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/09/EGH-Website-Layout_homepage-about.jpg" alt="Esnad Group Holding development" loading="lazy">
-</div>
-<div class="about__copy">
-<p class="eyebrow" data-reveal>Who We Are</p>
-<h2 data-reveal>A leading real estate organization in the GCC.</h2>
-<p data-reveal>
-Committed to innovation, sustainability, and excellence, Esnad Group
-Holding oversees a diverse portfolio of companies offering property
-management, construction, and consultancy services through five key
-subsidiary companies.
-</p>
+  <!-- ===== Work: Divisions + Companies (tabbed) ===== -->
+  <section class="section work" id="work">
+    <div class="wrap">
+      <p class="eyebrow" data-reveal>What We Do</p>
+      <h2 class="section__title" data-reveal>One Group, Every Discipline.</h2>
 
-<div class="mv-grid">
-<div>
-<h3>Mission</h3>
-<p>To provide consultation and management services characterized by
-transparency, integrity, and excellence — ensuring that every project
-meets the highest engineering and quality standards from planning
-through to completion.</p>
-</div>
-<div>
-<h3>Vision</h3>
-<p>To be the vanguard of the real estate industry, driving the market
-forward by setting new benchmarks in quality, innovation and
-sustainability through world-class projects.</p>
-</div>
-</div>
+      <div class="work-tabs" role="tablist" aria-label="Toggle divisions or companies" data-reveal>
+        <button class="tab-btn is-active" data-tab="divisions" role="tab" aria-selected="true">Divisions</button>
+        <button class="tab-btn" data-tab="companies" role="tab" aria-selected="false">Companies</button>
+      </div>
 
-<a href="#work" class="link-arrow" data-reveal>Meet our companies →</a>
-</div>
-</div>
-</section>
+      <div class="card-grid work-panel is-active" data-panel="divisions">
+        <article class="sector-card" data-reveal>
+          <div class="sector-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2026/04/developmentmngmt.jpg" alt="Development Management" loading="lazy" onerror="this.closest('.sector-card').classList.add('no-media')"></div>
+          <div class="sector-card__body">
+            <span class="sector-card__num">01</span>
+            <h3>Development Management</h3>
+            <p>Oversees the full lifecycle of complex real estate and infrastructure
+              projects, integrating strategic planning with expert execution.</p>
+          </div>
+        </article>
+        <article class="sector-card" data-reveal>
+          <div class="sector-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2026/04/prjmgmnt.jpg" alt="Project Management" loading="lazy" onerror="this.closest('.sector-card').classList.add('no-media')"></div>
+          <div class="sector-card__body">
+            <span class="sector-card__num">02</span>
+            <h3>Project Management</h3>
+            <p>Comprehensive oversight ensuring every venture is delivered with
+              precision, on schedule and within budget.</p>
+          </div>
+        </article>
+        <article class="sector-card" data-reveal>
+          <div class="sector-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2026/04/prpmngmnt.jpg" alt="Property Management" loading="lazy" onerror="this.closest('.sector-card').classList.add('no-media')"></div>
+          <div class="sector-card__body">
+            <span class="sector-card__num">03</span>
+            <h3>Property Management</h3>
+            <p>Maximizes asset value and tenant experience through proactive
+              maintenance and efficient operations.</p>
+          </div>
+        </article>
+        <article class="sector-card" data-reveal>
+          <div class="sector-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2026/04/fcltmngmnt.jpg" alt="Facility Management" loading="lazy" onerror="this.closest('.sector-card').classList.add('no-media')"></div>
+          <div class="sector-card__body">
+            <span class="sector-card__num">04</span>
+            <h3>Facility Management</h3>
+            <p>Long-term preservation and functional optimization of physical assets
+              through technical maintenance and sustainable utility management.</p>
+          </div>
+        </article>
+      </div>
 
-<!-- ===== Numbers ===== -->
-<section class="section numbers" id="numbers">
-<div class="wrap numbers__grid">
-<div class="stat" data-reveal>
-<span class="stat__num" data-count="3">0</span>
-<p>Countries across the GCC</p>
-</div>
-<div class="stat" data-reveal>
-<span class="stat__num" data-count="6">0</span>
-<p>Group companies</p>
-</div>
-<div class="stat" data-reveal>
-<span class="stat__num" data-count="4">0</span>
-<p>Core service divisions</p>
-</div>
-<div class="stat" data-reveal>
-<span class="stat__num" data-count="14">0</span><span class="stat__suffix">+</span>
-<p>Projects delivered &amp; underway</p>
-</div>
-</div>
-</section>
+      <div class="card-grid card-grid--companies work-panel" data-panel="companies" hidden>
+        <article class="sector-card" data-reveal>
+          <div class="sector-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2026/02/Amlak.jpg" alt="Esnad Management" loading="lazy" onerror="this.closest('.sector-card').classList.add('no-media')"></div>
+          <div class="sector-card__body">
+            <h3>Esnad Management</h3>
+            <p>A complete asset management solution at the core of the group's
+              integrated real estate services.</p>
+          </div>
+        </article>
+        <article class="sector-card" data-reveal>
+          <div class="sector-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/09/EGH-Website-Layout-38.jpg" alt="Masheed W.L.L." loading="lazy" onerror="this.closest('.sector-card').classList.add('no-media')"></div>
+          <div class="sector-card__body">
+            <h3>Masheed W.L.L.</h3>
+            <p>Esnad's real estate development arm, shaping master-planned
+              communities and landmark residences.</p>
+          </div>
+        </article>
+        <article class="sector-card" data-reveal>
+          <div class="sector-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/09/EGH-Website-Layout-37.jpg" alt="Barnhill Constructions" loading="lazy" onerror="this.closest('.sector-card').classList.add('no-media')"></div>
+          <div class="sector-card__body">
+            <h3>Barnhill Constructions</h3>
+            <p>Focused on the delivery of construction projects with precision and
+              engineering excellence.</p>
+          </div>
+        </article>
+        <article class="sector-card" data-reveal>
+          <div class="sector-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/09/EGH-Website-Layout-36.jpg" alt="Brassfield Consultancy W.L.L." loading="lazy" onerror="this.closest('.sector-card').classList.add('no-media')"></div>
+          <div class="sector-card__body">
+            <h3>Brassfield Consultancy W.L.L.</h3>
+            <p>A marketing consultancy firm building brand value across the group's
+              real estate ventures.</p>
+          </div>
+        </article>
+        <article class="sector-card" data-reveal>
+          <div class="sector-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/09/EGH-Website-Layout-35.jpg" alt="Merath Management" loading="lazy" onerror="this.closest('.sector-card').classList.add('no-media')"></div>
+          <div class="sector-card__body">
+            <h3>Merath Management</h3>
+            <p>A UAE-based joint venture delivering Esnad's integrated real estate
+              services across the Emirates.</p>
+          </div>
+        </article>
+        <article class="sector-card" data-reveal>
+          <div class="sector-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2026/02/Amlak.jpg" alt="Amlak Esnad" loading="lazy" onerror="this.closest('.sector-card').classList.add('no-media')"></div>
+          <div class="sector-card__body">
+            <h3>Amlak Esnad</h3>
+            <p>Esnad's dedicated real estate management company serving the Kingdom
+              of Saudi Arabia.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
 
-<!-- ===== Work: Divisions + Companies (tabbed) ===== -->
-<section class="section work" id="work">
-<div class="wrap">
-<p class="eyebrow" data-reveal>What We Do</p>
-<h2 class="section__title" data-reveal>One Group, Every Discipline.</h2>
+  <!-- ===== Projects ===== -->
+  <section class="section projects" id="projects">
+    <div class="wrap">
+      <p class="eyebrow" data-reveal>Portfolio</p>
+      <h2 class="section__title" data-reveal>Featured Projects</h2>
 
-<div class="work-tabs" role="tablist" aria-label="Toggle divisions or companies" data-reveal>
-<button class="tab-btn is-active" data-tab="divisions" role="tab" aria-selected="true">Divisions</button>
-<button class="tab-btn" data-tab="companies" role="tab" aria-selected="false">Companies</button>
-</div>
+      <div class="project-filters" role="tablist" aria-label="Filter projects by country" data-reveal>
+        <button class="filter-btn is-active" data-filter="all" role="tab" aria-selected="true">All</button>
+        <button class="filter-btn" data-filter="BH" role="tab" aria-selected="false">Bahrain</button>
+        <button class="filter-btn" data-filter="AE" role="tab" aria-selected="false">UAE</button>
+        <button class="filter-btn" data-filter="SA" role="tab" aria-selected="false">Saudi Arabia</button>
+      </div>
 
-<div class="card-grid work-panel is-active" data-panel="divisions">
-<article class="sector-card" data-reveal>
-<div class="sector-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2026/04/developmentmngmt.jpg" alt="Development Management" loading="lazy" onerror="this.closest('.sector-card').classList.add('no-media')"></div>
-<div class="sector-card__body">
-<span class="sector-card__num">01</span>
-<h3>Development Management</h3>
-<p>Oversees the full lifecycle of complex real estate and infrastructure
-projects, integrating strategic planning with expert execution.</p>
-</div>
-</article>
-<article class="sector-card" data-reveal>
-<div class="sector-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2026/04/prjmgmnt.jpg" alt="Project Management" loading="lazy" onerror="this.closest('.sector-card').classList.add('no-media')"></div>
-<div class="sector-card__body">
-<span class="sector-card__num">02</span>
-<h3>Project Management</h3>
-<p>Comprehensive oversight ensuring every venture is delivered with
-precision, on schedule and within budget.</p>
-</div>
-</article>
-<article class="sector-card" data-reveal>
-<div class="sector-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2026/04/prpmngmnt.jpg" alt="Property Management" loading="lazy" onerror="this.closest('.sector-card').classList.add('no-media')"></div>
-<div class="sector-card__body">
-<span class="sector-card__num">03</span>
-<h3>Property Management</h3>
-<p>Maximizes asset value and tenant experience through proactive
-maintenance and efficient operations.</p>
-</div>
-</article>
-<article class="sector-card" data-reveal>
-<div class="sector-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2026/04/fcltmngmnt.jpg" alt="Facility Management" loading="lazy" onerror="this.closest('.sector-card').classList.add('no-media')"></div>
-<div class="sector-card__body">
-<span class="sector-card__num">04</span>
-<h3>Facility Management</h3>
-<p>Long-term preservation and functional optimization of physical assets
-through technical maintenance and sustainable utility management.</p>
-</div>
-</article>
-</div>
+      <div class="project-grid" id="projectGrid">
+        <a class="project-card" href="#" data-reveal data-country="BH">
+          <div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-MeliaExt-1.jpg" alt="Melia Beachfront exterior" loading="lazy" onerror="this.remove()"></div>
+          <div class="project-card__meta">
+            <h3>Melia Beachfront</h3>
+            <span>Amwaj, Bahrain · 31 Units</span>
+          </div>
+        </a>
+        <a class="project-card" href="#" data-reveal data-country="AE">
+          <div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-VistaDelMarExt-1-1.jpg" alt="Vista Del Mar exterior" loading="lazy" onerror="this.remove()"></div>
+          <div class="project-card__meta">
+            <h3>Vista Del Mar</h3>
+            <span>Yas Island, UAE</span>
+          </div>
+        </a>
+        <a class="project-card" href="#" data-reveal data-country="AE">
+          <div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-OasisResInt-4-1.jpg" alt="Oasis Residences interior" loading="lazy" onerror="this.remove()"></div>
+          <div class="project-card__meta">
+            <h3>Oasis Residences</h3>
+            <span>Abu Dhabi, UAE</span>
+          </div>
+        </a>
+        <a class="project-card" href="#" data-reveal data-country="BH">
+          <div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-MerbadExt-1-1.jpg" alt="Merbad Garden Views exterior" loading="lazy" onerror="this.remove()"></div>
+          <div class="project-card__meta">
+            <h3>Merbad Garden Views</h3>
+            <span>Al Jasra, Bahrain</span>
+          </div>
+        </a>
+        <a class="project-card" href="#" data-reveal data-country="AE">
+          <div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-CWPlazaExt-1.jpg" alt="Cresswell Plaza exterior" loading="lazy" onerror="this.remove()"></div>
+          <div class="project-card__meta">
+            <h3>Cresswell Plaza</h3>
+            <span>Abu Dhabi, UAE · 100 Units</span>
+          </div>
+        </a>
+        <a class="project-card" href="#" data-reveal data-country="AE">
+          <div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-CWViewsExt-1.jpg" alt="Cresswell Views exterior" loading="lazy" onerror="this.remove()"></div>
+          <div class="project-card__meta">
+            <h3>Cresswell Views</h3>
+            <span>Dubai South, UAE</span>
+          </div>
+        </a>
+        <a class="project-card" href="#" data-reveal data-country="BH">
+          <div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-CrestviewExt-1-1.jpg" alt="Crestview Tower exterior" loading="lazy" onerror="this.remove()"></div>
+          <div class="project-card__meta">
+            <h3>Crestview Tower</h3>
+            <span>Hidd, Bahrain</span>
+          </div>
+        </a>
+        <a class="project-card" href="#" data-reveal data-country="BH">
+          <div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-OryxVillasExt-1.jpg" alt="Oryx Villas exterior" loading="lazy" onerror="this.remove()"></div>
+          <div class="project-card__meta">
+            <h3>Oryx Villas</h3>
+            <span>Al Areen, Bahrain</span>
+          </div>
+        </a>
+        <a class="project-card" href="#" data-reveal data-country="SA">
+          <div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-RazanExt-2-1.jpg" alt="Razan Resort exterior" loading="lazy" onerror="this.remove()"></div>
+          <div class="project-card__meta">
+            <h3>Razan Resort</h3>
+            <span>Riyadh, Saudi Arabia</span>
+          </div>
+        </a>
+        <a class="project-card" href="#" data-reveal data-country="BH">
+          <div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-AmanPlazaExt-1-1.jpg" alt="Aman Plaza exterior" loading="lazy" onerror="this.remove()"></div>
+          <div class="project-card__meta">
+            <h3>Aman Plaza</h3>
+            <span>Juffair, Bahrain</span>
+          </div>
+        </a>
+        <a class="project-card" href="#" data-reveal data-country="BH">
+          <div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-ReefSapphireExt-2g.jpg" alt="Sapphire by City of Water Residences exterior" loading="lazy" onerror="this.remove()"></div>
+          <div class="project-card__meta">
+            <h3>Sapphire by City of Water Residences</h3>
+            <span>Reef Island, Bahrain</span>
+          </div>
+        </a>
+        <a class="project-card" href="#" data-reveal data-country="BH">
+          <div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-Landmark34Ext-2.jpg" alt="Landmark 34 exterior" loading="lazy" onerror="this.remove()"></div>
+          <div class="project-card__meta">
+            <h3>Landmark 34</h3>
+            <span>Hidd, Bahrain</span>
+          </div>
+        </a>
+        <a class="project-card" href="#" data-reveal data-country="AE">
+          <div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-.jpg" alt="Greenview Tower exterior" loading="lazy" onerror="this.remove()"></div>
+          <div class="project-card__meta">
+            <h3>Greenview Tower</h3>
+            <span>Dubai, UAE</span>
+          </div>
+        </a>
+        <a class="project-card" href="#" data-reveal data-country="AE">
+          <div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-AlKaserExt-1.jpg" alt="Al Kaser exterior" loading="lazy" onerror="this.remove()"></div>
+          <div class="project-card__meta">
+            <h3>Al Kaser</h3>
+            <span>Abu Dhabi, UAE</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
 
-<div class="card-grid card-grid--companies work-panel" data-panel="companies" hidden>
-<article class="sector-card" data-reveal>
-<div class="sector-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2026/02/Amlak.jpg" alt="Esnad Management" loading="lazy" onerror="this.closest('.sector-card').classList.add('no-media')"></div>
-<div class="sector-card__body">
-<h3>Esnad Management</h3>
-<p>A complete asset management solution at the core of the group's
-integrated real estate services.</p>
-</div>
-</article>
-<article class="sector-card" data-reveal>
-<div class="sector-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/09/EGH-Website-Layout-38.jpg" alt="Masheed W.L.L." loading="lazy" onerror="this.closest('.sector-card').classList.add('no-media')"></div>
-<div class="sector-card__body">
-<h3>Masheed W.L.L.</h3>
-<p>Esnad's real estate development arm, shaping master-planned
-communities and landmark residences.</p>
-</div>
-</article>
-<article class="sector-card" data-reveal>
-<div class="sector-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/09/EGH-Website-Layout-37.jpg" alt="Barnhill Constructions" loading="lazy" onerror="this.closest('.sector-card').classList.add('no-media')"></div>
-<div class="sector-card__body">
-<h3>Barnhill Constructions</h3>
-<p>Focused on the delivery of construction projects with precision and
-engineering excellence.</p>
-</div>
-</article>
-<article class="sector-card" data-reveal>
-<div class="sector-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/09/EGH-Website-Layout-36.jpg" alt="Brassfield Consultancy W.L.L." loading="lazy" onerror="this.closest('.sector-card').classList.add('no-media')"></div>
-<div class="sector-card__body">
-<h3>Brassfield Consultancy W.L.L.</h3>
-<p>A marketing consultancy firm building brand value across the group's
-real estate ventures.</p>
-</div>
-</article>
-<article class="sector-card" data-reveal>
-<div class="sector-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/09/EGH-Website-Layout-35.jpg" alt="Merath Management" loading="lazy" onerror="this.closest('.sector-card').classList.add('no-media')"></div>
-<div class="sector-card__body">
-<h3>Merath Management</h3>
-<p>A UAE-based joint venture delivering Esnad's integrated real estate
-services across the Emirates.</p>
-</div>
-</article>
-<article class="sector-card" data-reveal>
-<div class="sector-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2026/02/Amlak.jpg" alt="Amlak Esnad" loading="lazy" onerror="this.closest('.sector-card').classList.add('no-media')"></div>
-<div class="sector-card__body">
-<h3>Amlak Esnad</h3>
-<p>Esnad's dedicated real estate management company serving the Kingdom
-of Saudi Arabia.</p>
-</div>
-</article>
-</div>
-</div>
-</section>
+  <!-- ===== CTA ===== -->
+  <section class="cta">
+    <div class="wrap cta__inner">
+      <h2 data-reveal>Ready to build what's next?</h2>
+      <a href="#contact" class="btn btn--primary" data-reveal><span>Start a Conversation</span></a>
+    </div>
+  </section>
 
-<!-- ===== Projects ===== -->
-<section class="section projects" id="projects">
-<div class="wrap">
-<p class="eyebrow" data-reveal>Portfolio</p>
-<h2 class="section__title" data-reveal>Featured Projects</h2>
-
-<div class="project-filters" role="tablist" aria-label="Filter projects by country" data-reveal>
-<button class="filter-btn is-active" data-filter="all" role="tab" aria-selected="true">All</button>
-<button class="filter-btn" data-filter="BH" role="tab" aria-selected="false">Bahrain</button>
-<button class="filter-btn" data-filter="AE" role="tab" aria-selected="false">UAE</button>
-<button class="filter-btn" data-filter="SA" role="tab" aria-selected="false">Saudi Arabia</button>
-</div>
-
-<div class="project-grid" id="projectGrid">
-<a class="project-card" href="#" data-reveal data-country="BH">
-<div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-MeliaExt-1.jpg" alt="Melia Beachfront exterior" loading="lazy" onerror="this.remove()"></div>
-<div class="project-card__meta">
-<h3>Melia Beachfront</h3>
-<span>Amwaj, Bahrain · 31 Units</span>
-</div>
-</a>
-<a class="project-card" href="#" data-reveal data-country="AE">
-<div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-VistaDelMarExt-1-1.jpg" alt="Vista Del Mar exterior" loading="lazy" onerror="this.remove()"></div>
-<div class="project-card__meta">
-<h3>Vista Del Mar</h3>
-<span>Yas Island, UAE</span>
-</div>
-</a>
-<a class="project-card" href="#" data-reveal data-country="AE">
-<div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-OasisResInt-4-1.jpg" alt="Oasis Residences interior" loading="lazy" onerror="this.remove()"></div>
-<div class="project-card__meta">
-<h3>Oasis Residences</h3>
-<span>Abu Dhabi, UAE</span>
-</div>
-</a>
-<a class="project-card" href="#" data-reveal data-country="BH">
-<div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-MerbadExt-1-1.jpg" alt="Merbad Garden Views exterior" loading="lazy" onerror="this.remove()"></div>
-<div class="project-card__meta">
-<h3>Merbad Garden Views</h3>
-<span>Al Jasra, Bahrain</span>
-</div>
-</a>
-<a class="project-card" href="#" data-reveal data-country="AE">
-<div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-CWPlazaExt-1.jpg" alt="Cresswell Plaza exterior" loading="lazy" onerror="this.remove()"></div>
-<div class="project-card__meta">
-<h3>Cresswell Plaza</h3>
-<span>Abu Dhabi, UAE · 100 Units</span>
-</div>
-</a>
-<a class="project-card" href="#" data-reveal data-country="AE">
-<div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-CWViewsExt-1.jpg" alt="Cresswell Views exterior" loading="lazy" onerror="this.remove()"></div>
-<div class="project-card__meta">
-<h3>Cresswell Views</h3>
-<span>Dubai South, UAE</span>
-</div>
-</a>
-<a class="project-card" href="#" data-reveal data-country="BH">
-<div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-CrestviewExt-1-1.jpg" alt="Crestview Tower exterior" loading="lazy" onerror="this.remove()"></div>
-<div class="project-card__meta">
-<h3>Crestview Tower</h3>
-<span>Hidd, Bahrain</span>
-</div>
-</a>
-<a class="project-card" href="#" data-reveal data-country="BH">
-<div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-OryxVillasExt-1.jpg" alt="Oryx Villas exterior" loading="lazy" onerror="this.remove()"></div>
-<div class="project-card__meta">
-<h3>Oryx Villas</h3>
-<span>Al Areen, Bahrain</span>
-</div>
-</a>
-<a class="project-card" href="#" data-reveal data-country="SA">
-<div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-RazanExt-2-1.jpg" alt="Razan Resort exterior" loading="lazy" onerror="this.remove()"></div>
-<div class="project-card__meta">
-<h3>Razan Resort</h3>
-<span>Riyadh, Saudi Arabia</span>
-</div>
-</a>
-<a class="project-card" href="#" data-reveal data-country="BH">
-<div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-AmanPlazaExt-1-1.jpg" alt="Aman Plaza exterior" loading="lazy" onerror="this.remove()"></div>
-<div class="project-card__meta">
-<h3>Aman Plaza</h3>
-<span>Juffair, Bahrain</span>
-</div>
-</a>
-<a class="project-card" href="#" data-reveal data-country="BH">
-<div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-ReefSapphireExt-2g.jpg" alt="Sapphire by City of Water Residences exterior" loading="lazy" onerror="this.remove()"></div>
-<div class="project-card__meta">
-<h3>Sapphire by City of Water Residences</h3>
-<span>Reef Island, Bahrain</span>
-</div>
-</a>
-<a class="project-card" href="#" data-reveal data-country="BH">
-<div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-Landmark34Ext-2.jpg" alt="Landmark 34 exterior" loading="lazy" onerror="this.remove()"></div>
-<div class="project-card__meta">
-<h3>Landmark 34</h3>
-<span>Hidd, Bahrain</span>
-</div>
-</a>
-<a class="project-card" href="#" data-reveal data-country="AE">
-<div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-.jpg" alt="Greenview Tower exterior" loading="lazy" onerror="this.remove()"></div>
-<div class="project-card__meta">
-<h3>Greenview Tower</h3>
-<span>Dubai, UAE</span>
-</div>
-</a>
-<a class="project-card" href="#" data-reveal data-country="AE">
-<div class="project-card__media"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/EGH-PROJ-AlKaserExt-1.jpg" alt="Al Kaser exterior" loading="lazy" onerror="this.remove()"></div>
-<div class="project-card__meta">
-<h3>Al Kaser</h3>
-<span>Abu Dhabi, UAE</span>
-</div>
-</a>
-</div>
-</div>
-</section>
-
-<!-- ===== CTA ===== -->
-<section class="cta">
-<div class="wrap cta__inner">
-<h2 data-reveal>Ready to build what's next?</h2>
-<a href="#contact" class="btn btn--primary" data-reveal><span>Start a Conversation</span></a>
-</div>
-</section>
-
-<!-- ===== Contact ===== -->
-<section class="section contact" id="contact">
-<div class="wrap contact__grid">
-<div class="contact__info" data-reveal>
-<p class="eyebrow">Get In Touch</p>
-<h2>Let's talk about your next project.</h2>
-<ul>
-<li><strong>Address</strong><span>Office 4201, Building 316, Road 4609, Block 346<br>United Towers – 42nd Floor, Bahrain Bay</span></li>
-<li><strong>Phone</strong><span><a href="tel:+97317341117">+973 1734 1117</a></span></li>
-<li><strong>Email</strong><span><a href="mailto:info@esnadmanagement.com">info@esnadmanagement.com</a></span></li>
-<li><strong>Social</strong><span><a href="https://www.instagram.com/esnadgroupholding" target="_blank" rel="noopener">@esnadgroupholding</a></span></li>
-</ul>
-</div>
-<form class="contact__form" id="contactForm" data-reveal>
-<div class="form-row">
-<label for="name">Name</label>
-<input id="name" name="name" type="text" required>
-</div>
-<div class="form-row">
-<label for="email">Email</label>
-<input id="email" name="email" type="email" required>
-</div>
-<div class="form-row">
-<label for="message">Message</label>
-<textarea id="message" name="message" rows="4" required></textarea>
-</div>
-<button type="submit" class="btn btn--primary"><span>Send Message</span></button>
-<p class="form-note" id="formNote" role="status" aria-live="polite"></p>
-</form>
-</div>
-</section>
+  <!-- ===== Contact ===== -->
+  <section class="section contact" id="contact">
+    <div class="wrap contact__grid">
+      <div class="contact__info" data-reveal>
+        <p class="eyebrow">Get In Touch</p>
+        <h2>Let's talk about your next project.</h2>
+        <ul>
+          <li><strong>Address</strong><span>Office 4201, Building 316, Road 4609, Block 346<br>United Towers – 42nd Floor, Bahrain Bay</span></li>
+          <li><strong>Phone</strong><span><a href="tel:+97317341117">+973 1734 1117</a></span></li>
+          <li><strong>Email</strong><span><a href="mailto:info@esnadmanagement.com">info@esnadmanagement.com</a></span></li>
+          <li><strong>Social</strong><span><a href="https://www.instagram.com/esnadgroupholding" target="_blank" rel="noopener">@esnadgroupholding</a></span></li>
+        </ul>
+      </div>
+      <form class="contact__form" id="contactForm" data-reveal>
+        <div class="form-row">
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" required>
+        </div>
+        <div class="form-row">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required>
+        </div>
+        <div class="form-row">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="btn btn--primary"><span>Send Message</span></button>
+        <p class="form-note" id="formNote" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
 
 </main>
 
 <!-- ===== Footer ===== -->
 <footer class="site-footer">
-<div class="wrap">
-<div class="footer__top">
-<a href="#top" class="brand footer__brand"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/ESNAD.png" alt="Esnad Group Holding" class="brand__logo"></a>
-<a href="#contact" class="footer__cta">Start a Conversation <span aria-hidden="true">→</span></a>
-</div>
+  <div class="wrap">
+    <div class="footer__top">
+      <a href="#top" class="brand footer__brand"><img decoding="async" src="https://www.esnadgroupholding.com/wp-content/uploads/2025/10/ESNAD.png" alt="Esnad Group Holding" class="brand__logo"></a>
+      <a href="#contact" class="footer__cta">Start a Conversation <span aria-hidden="true">→</span></a>
+    </div>
 
-<div class="footer__grid">
-<div class="footer__col">
-<strong>Head Office</strong>
-<p>Office 4201, Building 316, Road 4609, Block 346<br>United Towers – 42nd Floor, Bahrain Bay</p>
-</div>
-<div class="footer__col">
-<strong>Contact</strong>
-<p><a href="tel:+97317341117">+973 1734 1117</a><br><a href="mailto:info@esnadmanagement.com">info@esnadmanagement.com</a></p>
-</div>
-<div class="footer__col">
-<strong>Quick Links</strong>
-<nav aria-label="Footer">
-<a href="#about">About</a>
-<a href="#work">Work</a>
-<a href="#projects">Projects</a>
-<a href="#contact">Contact</a>
-</nav>
-</div>
-<div class="footer__col">
-<strong>Social</strong>
-<p><a href="https://www.instagram.com/esnadgroupholding" target="_blank" rel="noopener">@esnadgroupholding</a></p>
-</div>
-</div>
+    <div class="footer__grid">
+      <div class="footer__col">
+        <strong>Head Office</strong>
+        <p>Office 4201, Building 316, Road 4609, Block 346<br>United Towers – 42nd Floor, Bahrain Bay</p>
+      </div>
+      <div class="footer__col">
+        <strong>Contact</strong>
+        <p><a href="tel:+97317341117">+973 1734 1117</a><br><a href="mailto:info@esnadmanagement.com">info@esnadmanagement.com</a></p>
+      </div>
+      <div class="footer__col">
+        <strong>Quick Links</strong>
+        <nav aria-label="Footer">
+          <a href="#about">About</a>
+          <a href="#work">Work</a>
+          <a href="#projects">Projects</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+      <div class="footer__col">
+        <strong>Social</strong>
+        <p><a href="https://www.instagram.com/esnadgroupholding" target="_blank" rel="noopener">@esnadgroupholding</a></p>
+      </div>
+    </div>
 
-<p class="footer__copy">© <span id="year"></span> Esnad Group Holding. All rights reserved.</p>
-</div>
+    <p class="footer__copy">© <span id="year"></span> Esnad Group Holding. All rights reserved.</p>
+  </div>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="js/scene.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
