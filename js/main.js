@@ -142,6 +142,17 @@
     // diorama, instead of a flat image sliding around.
     if (heroStage && window.matchMedia('(pointer: fine)').matches) {
       let targetX = 0, targetY = 0, curX = 0, curY = 0;
+      let rafId = null;
+
+      const tiltLoop = () => {
+        curX += (targetX - curX) * 0.06;
+        curY += (targetY - curY) * 0.06;
+        heroStage.style.transform = `rotateX(${curX.toFixed(3)}deg) rotateY(${curY.toFixed(3)}deg)`;
+        rafId = requestAnimationFrame(tiltLoop);
+      };
+      const startTilt = () => { if (rafId === null) rafId = requestAnimationFrame(tiltLoop); };
+      const stopTilt = () => { if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; } };
+
       heroScene.addEventListener('mousemove', (e) => {
         const rect = heroScene.getBoundingClientRect();
         const mx = (e.clientX - rect.left) / rect.width - 0.5;
@@ -150,12 +161,17 @@
         targetX = -my * 6;
       });
       heroScene.addEventListener('mouseleave', () => { targetX = 0; targetY = 0; });
-      (function tiltLoop() {
-        curX += (targetX - curX) * 0.06;
-        curY += (targetY - curY) * 0.06;
-        heroStage.style.transform = `rotateX(${curX.toFixed(3)}deg) rotateY(${curY.toFixed(3)}deg)`;
-        requestAnimationFrame(tiltLoop);
-      })();
+
+      // Only spend a frame budget on this while the hero is actually on
+      // screen — otherwise it's an infinite rAF loop running for the whole
+      // session on every page view, long after the user has scrolled away.
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver((entries) => {
+          entries.forEach((entry) => (entry.isIntersecting ? startTilt() : stopTilt()));
+        }).observe(heroScene);
+      } else {
+        startTilt();
+      }
     }
   }
 
