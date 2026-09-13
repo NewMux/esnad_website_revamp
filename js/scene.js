@@ -11,7 +11,7 @@
    throws while building or running the scene, `html` gets a `no-webgl`
    class and CSS (see style.css) swaps every panel back to a fully
    opaque background — the page is complete either way.
-   =================================================================== */
+=================================================================== */
 (() => {
   'use strict';
 
@@ -83,8 +83,75 @@
       buildings.push({ x, z, w, d, h });
     }
 
-    // Hero tower — the tall centerpiece the flight starts beneath.
-    addBuilding(0, -20, 15, 15, 135, 0);
+    // Twin "sail" towers — a low-poly nod to the Bahrain World Trade
+    // Center, standing where the single hero tower used to be, so the
+    // skyline the flight opens on reads as Manama rather than a
+    // generic anywhere-city.
+    const SAIL_RADIUS = 9;
+    const SAIL_HEIGHT = 135;
+    const SAIL_GAP = 20; // distance between the two tower centers
+    const towerLightMat = new THREE.MeshBasicMaterial({ color: 0xf4d896, transparent: true, opacity: 0.9 });
+
+    function addSailTower(x, z, lean, matIndex) {
+      // A cylinder flattened on one axis reads as an elliptical "sail"
+      // cross-section at low-poly — the signature WTC silhouette.
+      const geo = new THREE.CylinderGeometry(SAIL_RADIUS * 0.32, SAIL_RADIUS, SAIL_HEIGHT, 8, 1, false);
+      geo.scale(1, 1, 0.5);
+      const mesh = new THREE.Mesh(geo, buildingMats[matIndex % buildingMats.length]);
+      mesh.position.set(x, SAIL_HEIGHT / 2, z);
+      mesh.rotation.y = Math.PI / 8; // angle the flattened face toward the flight path
+      mesh.rotation.z = lean; // slight lean toward its twin, sail-style
+      scene.add(mesh);
+
+      // A scatter of small lit accents up the curtain wall.
+      for (let i = 0; i < 14; i++) {
+        const angle = rand(0, Math.PI * 2);
+        const light = new THREE.Mesh(new THREE.BoxGeometry(0.5, 1.4, 0.5), towerLightMat);
+        light.position.set(
+          x + Math.cos(angle) * SAIL_RADIUS * 0.55,
+          rand(SAIL_HEIGHT * 0.12, SAIL_HEIGHT * 0.94),
+          z + Math.sin(angle) * SAIL_RADIUS * 0.28
+        );
+        scene.add(light);
+      }
+      return mesh;
+    }
+
+    addSailTower(-SAIL_GAP / 2, -20, 0.05, 0);
+    addSailTower(SAIL_GAP / 2, -20, -0.05, 2);
+
+    // Three turbine sky-bridges spanning the gap between the sails —
+    // the signature Bahrain WTC detail — each carrying a slow-spinning
+    // wind turbine.
+    const turbines = [];
+    [0.42, 0.62, 0.82].forEach((frac) => {
+      const y = SAIL_HEIGHT * frac;
+
+      const bridge = new THREE.Mesh(new THREE.BoxGeometry(SAIL_GAP + 5, 1.6, 3.4), buildingMats[1]);
+      bridge.position.set(0, y, -20);
+      scene.add(bridge);
+
+      const hub = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.7, 0.7, 1.4, 8),
+        new THREE.MeshStandardMaterial({ color: 0xe8c07d, emissive: 0xe8c07d, emissiveIntensity: 0.4, roughness: 0.5 })
+      );
+      hub.rotation.x = Math.PI / 2;
+      hub.position.set(0, y + 2.6, -20);
+      scene.add(hub);
+
+      const blades = new THREE.Group();
+      for (let b = 0; b < 3; b++) {
+        const spoke = new THREE.Group();
+        spoke.rotation.z = (b / 3) * Math.PI * 2;
+        const blade = new THREE.Mesh(new THREE.BoxGeometry(0.3, 4.6, 0.6), buildingMats[3]);
+        blade.position.y = 2.3; // push the blade out from the hub center
+        spoke.add(blade);
+        blades.add(spoke);
+      }
+      blades.position.copy(hub.position);
+      scene.add(blades);
+      turbines.push(blades);
+    });
 
     // The rest of the skyline, thinning out toward the edges so the flight
     // corridor down the middle stays open.
@@ -140,30 +207,21 @@
     windows.count = wi;
     scene.add(windows);
 
-    // A slow-spinning gold halo beside the hero tower — a small flourish.
-    const halo = new THREE.Mesh(
-      new THREE.TorusGeometry(10, 0.14, 8, 48),
-      new THREE.MeshStandardMaterial({ color: 0xe8c07d, emissive: 0xe8c07d, emissiveIntensity: 0.65, roughness: 0.4 })
-    );
-    halo.position.set(14, 118, -20);
-    halo.rotation.x = Math.PI / 2.5;
-    scene.add(halo);
-
     /* ---------- Camera flight path ----------
        One waypoint per story beat: the four hero chapters get the most
        dramatic movement (that's where the canvas is fully uncovered),
        then the path keeps drifting gently behind the translucent content
        panels for About → Contact, ending on a calm wide shot. */
     const waypoints = [
-      { p: [0, 9, 46], l: [0, 60, -20] },          // ch.1 — street level, looking up at the hero tower
-      { p: [26, 42, -10], l: [-10, 75, -70] },     // ch.2 — rising between towers
-      { p: [-30, 88, -95], l: [40, 55, -180] },    // ch.3 — wide orbit reveal of the skyline
-      { p: [45, 68, -170], l: [-25, 45, -260] },   // ch.4 — push toward the project cluster
-      { p: [-35, 82, -220], l: [20, 50, -300] },   // about
-      { p: [15, 105, -280], l: [-15, 60, -340] },  // numbers / work
-      { p: [-25, 95, -310], l: [25, 42, -350] },   // projects
-      { p: [30, 120, -330], l: [0, 80, -360] },    // cta — elevated dusk vista
-      { p: [0, 55, -300], l: [0, 38, -340] },      // contact / footer — calm resting shot
+      { p: [0, 9, 46], l: [0, 60, -20] }, // ch.1 — street level, looking up at the twin sail towers
+      { p: [26, 42, -10], l: [-10, 75, -70] }, // ch.2 — rising between towers
+      { p: [-30, 88, -95], l: [40, 55, -180] }, // ch.3 — wide orbit reveal of the skyline
+      { p: [45, 68, -170], l: [-25, 45, -260] }, // ch.4 — push toward the project cluster
+      { p: [-35, 82, -220], l: [20, 50, -300] }, // about
+      { p: [15, 105, -280], l: [-15, 60, -340] }, // numbers / work
+      { p: [-25, 95, -310], l: [25, 42, -350] }, // projects
+      { p: [30, 120, -330], l: [0, 80, -360] }, // cta — elevated dusk vista
+      { p: [0, 55, -300], l: [0, 38, -340] }, // contact / footer — calm resting shot
     ];
     const posCurve = new THREE.CatmullRomCurve3(waypoints.map((w) => new THREE.Vector3(...w.p)), false, 'catmullrom', 0.4);
     const lookCurve = new THREE.CatmullRomCurve3(waypoints.map((w) => new THREE.Vector3(...w.l)), false, 'catmullrom', 0.4);
@@ -207,7 +265,7 @@
         camera.lookAt(lookCurve.getPointAt(t));
 
         if (!reduceMotion) {
-          halo.rotation.z += dt * 0.15;
+          for (const turbine of turbines) turbine.rotation.z += dt * 1.8;
         }
 
         renderer.render(scene, camera);
