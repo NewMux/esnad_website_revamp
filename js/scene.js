@@ -96,6 +96,16 @@
     const SAIL_GAP = TURBINE_RADIUS * 2 + SAIL_RADIUS * 1.6 + 4; // enough clearance for the turbines to spin between the towers
     const towerLightMat = new THREE.MeshBasicMaterial({ color: 0xf4d896, transparent: true, opacity: 0.9 });
 
+    // A real photo of the towers (Wikimedia Commons, CC-BY-SA 4.0, B.alotaby)
+    // mapped onto the geometry below, planar-projected front-on rather than
+    // wrapped circumferentially, so it reads as one coherent facade instead
+    // of a banded collage. Fails soft: if the image can't load, the mesh
+    // just falls back to sailMat's flat color.
+    const sailTexture = new THREE.TextureLoader().load('img/bwtc-facade.jpg');
+    sailTexture.wrapS = THREE.ClampToEdgeWrapping;
+    sailTexture.wrapT = THREE.ClampToEdgeWrapping;
+    const sailMat = new THREE.MeshStandardMaterial({ map: sailTexture, color: 0x9fb2c9, roughness: 0.7, metalness: 0.05 });
+
     // The real tower's silhouette: a broad sail-shaped base that bulges
     // gently through the lower third, then tapers in a long continuous
     // curve to a slender point at the roofline — built as a lathed
@@ -106,11 +116,24 @@
       [0.05, 0.995], [0.00, 1.000],
     ];
 
-    function addSailTower(x, z, lean, matIndex) {
+    function addSailTower(x, z, lean) {
       const points = SAIL_PROFILE.map(([r, f]) => new THREE.Vector2(r * SAIL_RADIUS, f * SAIL_HEIGHT));
       const geo = new THREE.LatheGeometry(points, 10);
       geo.scale(1, 1, SAIL_FLATTEN); // flatten the lathe into the elliptical "sail" cross-section
-      const mesh = new THREE.Mesh(geo, buildingMats[matIndex % buildingMats.length]);
+
+      // Re-map UVs to a simple front-on planar projection (u from local x,
+      // v from height) instead of the lathe's default circumferential wrap,
+      // so the photo lands as one recognizable image across the sail.
+      const posAttr = geo.attributes.position;
+      const uvAttr = geo.attributes.uv;
+      for (let i = 0; i < posAttr.count; i++) {
+        const px = posAttr.getX(i);
+        const py = posAttr.getY(i);
+        uvAttr.setXY(i, (px + SAIL_RADIUS) / (2 * SAIL_RADIUS), py / SAIL_HEIGHT);
+      }
+      uvAttr.needsUpdate = true;
+
+      const mesh = new THREE.Mesh(geo, sailMat);
       mesh.position.set(x, 0, z);
       mesh.rotation.y = Math.PI / 8; // angle the flattened face toward the flight path
       mesh.rotation.z = lean; // slight lean toward its twin, sail-style
@@ -132,8 +155,8 @@
       return mesh;
     }
 
-    addSailTower(-SAIL_GAP / 2, -20, 0.05, 0);
-    addSailTower(SAIL_GAP / 2, -20, -0.05, 2);
+    addSailTower(-SAIL_GAP / 2, -20, 0.05);
+    addSailTower(SAIL_GAP / 2, -20, -0.05);
 
     // Three turbine sky-bridges spanning the gap between the sails —
     // the signature Bahrain WTC detail — each carrying a slow-spinning,
