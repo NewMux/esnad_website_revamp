@@ -469,7 +469,7 @@ button { font: inherit; background: none; border: none; cursor: pointer; color: 
 @media (max-width: 860px) { .contact__grid { grid-template-columns: 1fr; } }
 
 /* ---------- Footer ---------- */
-.site-footer { background: var(--ink); color: var(--text-dim); padding: clamp(3rem, 7vw, 5rem) 0 2.5rem; }
+.site-footer { position: relative; background: var(--ink); color: var(--text-dim); padding: clamp(3rem, 7vw, 5rem) 0 2.5rem; }
 
 .footer__top {
   display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;
