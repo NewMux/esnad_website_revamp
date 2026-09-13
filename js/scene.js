@@ -83,34 +83,49 @@
       buildings.push({ x, z, w, d, h });
     }
 
-    // Twin "sail" towers — a low-poly nod to the Bahrain World Trade
-    // Center, standing where the single hero tower used to be, so the
-    // skyline the flight opens on reads as Manama rather than a
-    // generic anywhere-city.
-    const SAIL_RADIUS = 9;
-    const SAIL_HEIGHT = 135;
-    const SAIL_GAP = 20; // distance between the two tower centers
+    // Twin "sail" towers — modeled at the real Bahrain World Trade
+    // Center's proportions (50 floors / 240m tall, 29m turbines spanning
+    // the gap between them), standing where the single generic hero
+    // tower used to be, so the skyline the flight opens on reads as
+    // Manama rather than a generic anywhere-city.
+    const METERS_TO_UNITS = 135 / 240; // scene scale, pinned to the tower height below
+    const SAIL_HEIGHT = 240 * METERS_TO_UNITS; // 240m real height -> 135 scene units
+    const SAIL_RADIUS = 15 * METERS_TO_UNITS; // ~15m base half-width
+    const SAIL_FLATTEN = 0.42; // squashes the lathe's circular cross-section into an ellipse
+    const TURBINE_RADIUS = (29 * METERS_TO_UNITS) / 2; // real 29m-diameter turbines
+    const SAIL_GAP = TURBINE_RADIUS * 2 + SAIL_RADIUS * 1.6 + 4; // enough clearance for the turbines to spin between the towers
     const towerLightMat = new THREE.MeshBasicMaterial({ color: 0xf4d896, transparent: true, opacity: 0.9 });
 
+    // The real tower's silhouette: a broad sail-shaped base that bulges
+    // gently through the lower third, then tapers in a long continuous
+    // curve to a slender point at the roofline — built as a lathed
+    // profile (revolved around Y) rather than a simple tapered box.
+    const SAIL_PROFILE = [
+      [0.50, 0.000], [0.97, 0.035], [1.00, 0.130], [0.96, 0.320],
+      [0.84, 0.520], [0.66, 0.700], [0.42, 0.860], [0.20, 0.955],
+      [0.05, 0.995], [0.00, 1.000],
+    ];
+
     function addSailTower(x, z, lean, matIndex) {
-      // A cylinder flattened on one axis reads as an elliptical "sail"
-      // cross-section at low-poly — the signature WTC silhouette.
-      const geo = new THREE.CylinderGeometry(SAIL_RADIUS * 0.32, SAIL_RADIUS, SAIL_HEIGHT, 8, 1, false);
-      geo.scale(1, 1, 0.5);
+      const points = SAIL_PROFILE.map(([r, f]) => new THREE.Vector2(r * SAIL_RADIUS, f * SAIL_HEIGHT));
+      const geo = new THREE.LatheGeometry(points, 10);
+      geo.scale(1, 1, SAIL_FLATTEN); // flatten the lathe into the elliptical "sail" cross-section
       const mesh = new THREE.Mesh(geo, buildingMats[matIndex % buildingMats.length]);
-      mesh.position.set(x, SAIL_HEIGHT / 2, z);
+      mesh.position.set(x, 0, z);
       mesh.rotation.y = Math.PI / 8; // angle the flattened face toward the flight path
       mesh.rotation.z = lean; // slight lean toward its twin, sail-style
       scene.add(mesh);
 
       // A scatter of small lit accents up the curtain wall.
-      for (let i = 0; i < 14; i++) {
+      for (let i = 0; i < 22; i++) {
         const angle = rand(0, Math.PI * 2);
+        const f = rand(0.1, 0.92);
+        const r = SAIL_RADIUS * (1 - Math.abs(f - 0.35)) * 0.65; // rough taper-aware radius
         const light = new THREE.Mesh(new THREE.BoxGeometry(0.5, 1.4, 0.5), towerLightMat);
         light.position.set(
-          x + Math.cos(angle) * SAIL_RADIUS * 0.55,
-          rand(SAIL_HEIGHT * 0.12, SAIL_HEIGHT * 0.94),
-          z + Math.sin(angle) * SAIL_RADIUS * 0.28
+          x + Math.cos(angle) * r,
+          f * SAIL_HEIGHT,
+          z + Math.sin(angle) * r * SAIL_FLATTEN
         );
         scene.add(light);
       }
@@ -121,30 +136,31 @@
     addSailTower(SAIL_GAP / 2, -20, -0.05, 2);
 
     // Three turbine sky-bridges spanning the gap between the sails —
-    // the signature Bahrain WTC detail — each carrying a slow-spinning
-    // wind turbine.
+    // the signature Bahrain WTC detail — each carrying a slow-spinning,
+    // real-diameter (29m) wind turbine.
     const turbines = [];
     [0.42, 0.62, 0.82].forEach((frac) => {
       const y = SAIL_HEIGHT * frac;
 
-      const bridge = new THREE.Mesh(new THREE.BoxGeometry(SAIL_GAP + 5, 1.6, 3.4), buildingMats[1]);
+      const bridge = new THREE.Mesh(new THREE.BoxGeometry(SAIL_GAP + 6, 2, 4), buildingMats[1]);
       bridge.position.set(0, y, -20);
       scene.add(bridge);
 
+      const hubRadius = TURBINE_RADIUS * 0.12;
       const hub = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.7, 0.7, 1.4, 8),
+        new THREE.CylinderGeometry(hubRadius, hubRadius, hubRadius * 2, 8),
         new THREE.MeshStandardMaterial({ color: 0xe8c07d, emissive: 0xe8c07d, emissiveIntensity: 0.4, roughness: 0.5 })
       );
       hub.rotation.x = Math.PI / 2;
-      hub.position.set(0, y + 2.6, -20);
+      hub.position.set(0, y + hubRadius * 3.5, -20);
       scene.add(hub);
 
       const blades = new THREE.Group();
       for (let b = 0; b < 3; b++) {
         const spoke = new THREE.Group();
         spoke.rotation.z = (b / 3) * Math.PI * 2;
-        const blade = new THREE.Mesh(new THREE.BoxGeometry(0.3, 4.6, 0.6), buildingMats[3]);
-        blade.position.y = 2.3; // push the blade out from the hub center
+        const blade = new THREE.Mesh(new THREE.BoxGeometry(0.45, TURBINE_RADIUS, 0.9), buildingMats[3]);
+        blade.position.y = TURBINE_RADIUS / 2; // push the blade out from the hub center
         spoke.add(blade);
         blades.add(spoke);
       }
@@ -154,12 +170,14 @@
     });
 
     // The rest of the skyline, thinning out toward the edges so the flight
-    // corridor down the middle stays open.
+    // corridor down the middle stays open — widened to clear the
+    // real-proportioned sail towers' now-larger footprint and turbine span.
     const BUILDING_COUNT = isCoarse ? 45 : 75;
+    const SKYLINE_MIN_X = SAIL_GAP / 2 + SAIL_RADIUS + 6;
     let mi = 1;
     for (let i = 0; i < BUILDING_COUNT; i++) {
       const side = Math.random() < 0.5 ? -1 : 1;
-      const x = side * rand(16, 130);
+      const x = side * rand(SKYLINE_MIN_X, 130);
       const z = rand(-330, 50);
       const w = rand(10, 22);
       const d = rand(10, 22);
