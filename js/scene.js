@@ -99,12 +99,14 @@
     // A real photo of the towers (Wikimedia Commons, CC-BY-SA 4.0, B.alotaby)
     // mapped onto the geometry below, planar-projected front-on rather than
     // wrapped circumferentially, so it reads as one coherent facade instead
-    // of a banded collage. Fails soft: if the image can't load, the mesh
-    // just falls back to sailMat's flat color.
+    // of a banded collage. Unlit (Basic, not Standard) on purpose: it's a
+    // night photo with its own baked-in lighting (lit windows, blue LED
+    // trim) — running it through the scene's dim directional/hemisphere
+    // lights like a normal building would crush all of that into shadow.
     const sailTexture = new THREE.TextureLoader().load('img/bwtc-facade.jpg');
     sailTexture.wrapS = THREE.ClampToEdgeWrapping;
     sailTexture.wrapT = THREE.ClampToEdgeWrapping;
-    const sailMat = new THREE.MeshStandardMaterial({ map: sailTexture, color: 0x9fb2c9, roughness: 0.7, metalness: 0.05 });
+    const sailMat = new THREE.MeshBasicMaterial({ map: sailTexture });
 
     // The real tower's silhouette: a broad sail-shaped base that bulges
     // gently through the lower third, then tapers in a long continuous
